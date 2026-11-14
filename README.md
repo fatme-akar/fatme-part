@@ -1,112 +1,186 @@
-# Darb — Campus Ride Board
+### Made by [@kilianvalkhof](https://twitter.com/kilianvalkhof)
 
-React frontend for posting campus rides and managing the **My rides: Driving** dashboard
-in the CSC443 group project. Drivers can create and edit trips, review seat requests,
-and cancel rides. This module covers surfaces **05 (Post a ride)** and **06 (Driving)**.
+#### Other projects:
 
-## Features
+- 💻 [Polypane](https://polypane.app) - Develop responsive websites and apps twice as fast on multiple screens at once
+- 🖌️ [Superposition](https://superposition.design) - Kickstart your design system by extracting design tokens from your website
+- 🗒️ [FromScratch](https://fromscratch.rocks) - A smart but simple autosaving scratchpad
 
-- Validated create/edit form with an unsaved-changes dialog.
-- Driving dashboard and request review with loading, empty, error, and populated states.
-- Reusable components, responsive layouts, keyboard-accessible controls, and local fonts.
+---
 
-## Stack and requirements
+# Electron-to-Chromium [![npm](https://img.shields.io/npm/v/electron-to-chromium.svg)](https://www.npmjs.com/package/electron-to-chromium) [![npm-downloads](https://img.shields.io/npm/dm/electron-to-chromium.svg)](https://www.npmjs.com/package/electron-to-chromium) [![codecov](https://codecov.io/gh/Kilian/electron-to-chromium/branch/master/graph/badge.svg)](https://codecov.io/gh/Kilian/electron-to-chromium)[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FKilian%2Felectron-to-chromium.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FKilian%2Felectron-to-chromium?ref=badge_shield)
 
-| Purpose | Technology |
-| --- | --- |
-| UI | React 19, JavaScript (JSX) |
-| Routing | React Router 7 with a data router |
-| Styling | Tailwind CSS 3.4, PostCSS, local WOFF2 fonts |
-| Development/build | Vite 7, npm |
-| Testing | Node.js test runner, Playwright |
-| Demo persistence | Browser localStorage |
+This repository provides a mapping of Electron versions to the Chromium version that it uses.
 
-Use **Node.js 22.12+** and npm. Browser tests also require Google Chrome.
-The current app uses mock data and a demo user; a backend and environment variables
-are not needed to run it.
+This package is used in [Browserslist](https://github.com/ai/browserslist), so you can use e.g. `electron >= 1.4` in [Autoprefixer](https://github.com/postcss/autoprefixer), [Stylelint](https://github.com/stylelint/stylelint), [babel-preset-env](https://github.com/babel/babel-preset-env) and [eslint-plugin-compat](https://github.com/amilajack/eslint-plugin-compat).
 
-## Getting started
+**Supported by:**
 
-Open a terminal in this folder:
+  <a href="https://m.do.co/c/bb22ea58e765">
+    <img src="https://opensource.nyc3.cdn.digitaloceanspaces.com/attribution/assets/SVG/DO_Logo_horizontal_blue.svg" width="201px">
+  </a>
 
-```sh
-npm ci
-npm run dev
+
+## Install
+Install using `npm install electron-to-chromium`.
+
+## Usage
+To include Electron-to-Chromium, require it:
+
+```js
+var e2c = require('electron-to-chromium');
 ```
 
-Visit **http://127.0.0.1:5173**. If that port is occupied, use the URL printed by Vite.
-The app opens the Driving dashboard with **Hana Ali** signed in as the demo driver.
+### Properties
+The Electron-to-Chromium object has 4 properties to use:
 
-## Pages and demo flow
+#### `versions`
+An object of key-value pairs with a _major_ Electron version as the key, and the corresponding major Chromium version as the value.
 
-| Route | What to see |
-| --- | --- |
-| `/` or `/my-rides/driving` | Your rides, seat counts, and pending request actions |
-| `/post` | Create a ride |
-| `/rides/morning-trip` | Sample owner workspace with two pending requests |
-| `/rides/midweek-trip/edit` | Edit the second sample ride |
-| `/my-rides/driving?demo=empty` | Empty dashboard |
-| `/my-rides/driving?demo=error` | Load failure; **Try again** recovers |
-
-Post a ride, then open it from Driving to edit it. On the sample morning trip, accepting
-Owen's two-seat request fills the car and blocks further acceptance. Change a form field
-and select **Cancel** to try the unsaved-changes guard.
-
-Browse (`/rides`), Riding (`/my-rides/riding`), and Sign In (`/sign-in`) are placeholders
-for the other group members' screens. The owner workspace supports request management;
-the complete Ride Detail screen will be integrated by the team.
-
-## Commands
-
-| Command | Purpose |
-| --- | --- |
-| `npm run dev` | Start the development server |
-| `npm run build` | Create the production build in `dist/` |
-| `npm run preview` | Serve the production build locally after building |
-| `npm test` | Test validation, seat rules, persistence, and service behavior |
-| `npm run test:e2e` | Test user flows on desktop and 390px mobile layouts |
-
-Playwright uses Google Chrome and manages its own dev server. Browser settings are in
-[playwright.config.js](playwright.config.js).
-Production hosting must serve `index.html` for application routes so direct links work.
-
-## Project structure
-
-```text
-src/
-  App.jsx           Routes
-  components/       Shared UI, ride form, seat counter, and request review
-  pages/            Post/Edit, Driving, and owner workspace
-  domain/rides.js   Validation, seat calculations, dates, and conflict rules
-  data/             Sample data and replaceable mock service
-  state/            Shared rides, viewer, actions, and loading state
-  styles/           Tailwind entry point and font declarations
-public/fonts/       Bundled fonts
-tests/              Logic and browser tests
+```js
+var versions = e2c.versions;
+console.log(versions['1.4']);
+// returns "53"
 ```
 
-## Data and ride rules
+#### `fullVersions`
+An object of key-value pairs with a Electron version as the key, and the corresponding full Chromium version as the value.
 
-Changes persist in localStorage under `darb.rides.v1`. To restore fresh sample rides,
-delete that key in browser developer tools and reload. Sample departures start in the
-future when data is first created. Demo-state URLs use temporary in-memory data.
+```js
+var versions = e2c.fullVersions;
+console.log(versions['1.4.11']);
+// returns "53.0.2785.143"
+```
 
-- Remaining seats are calculated from **accepted seat quantities**; pending requests do not reserve seats.
-- Accepted seats cannot exceed the driver's offered seats or be removed by reducing capacity.
-- A rider cannot hold accepted seats on trips departing less than three hours apart; exactly three hours is allowed.
-- Forms and displays use `Asia/Beirut`; stored departures are ISO timestamps. Prices are USD per seat.
-- Once departure time passes, Driving shows **Departed** and request review closes,
-  including when the page stays open. Existing ride and request records are retained;
-  `Departed` is a display state, not a new stored status.
+#### `chromiumVersions`
+An object of key-value pairs with a _major_ Chromium version as the key, and the corresponding major Electron version as the value.
 
-## Team integration
+```js
+var versions = e2c.chromiumVersions;
+console.log(versions['54']);
+// returns "1.4"
+```
 
-Use one shared router, layout, Tailwind theme, and `RidesProvider` in the combined app.
-[App.jsx](src/App.jsx) exports the routes. Share `SeatCounter`, `MyRidesTabs`, and the
-domain helpers, and reuse `RequestReview` inside the full owner Ride Detail screen.
+#### `fullChromiumVersions`
+An object of key-value pairs with a Chromium version as the key, and an array of the corresponding major Electron versions as the value.
 
-Pass the authenticated user as `viewer` to `RidesProvider` (`null` when signed out),
-using `{ id, name, initials, passengerCapacity }`. Replace the mock service through the
-provider's `service` prop. See [rideService.js](src/data/rideService.js) for its async
-`list`, `save`, `review`, and `cancel` contract, and [seed.js](src/data/seed.js) for the
-data shape. The API must enforce ownership, capacity, and time-conflict rules when added.
+```js
+var versions = e2c.fullChromiumVersions;
+console.log(versions['54.0.2840.101']);
+// returns ["1.5.1", "1.5.0"]
+```
+### Functions
+
+#### `electronToChromium(query)`
+Arguments:
+* Query: string or number, required. A major or full Electron version.
+
+A function that returns the corresponding Chromium version for a given Electron function. Returns a string.
+
+If you provide it with a major Electron version, it will return a major Chromium version:
+
+```js
+var chromeVersion = e2c.electronToChromium('1.4');
+// chromeVersion is "53"
+```
+
+If you provide it with a full Electron version, it will return the full Chromium version.
+
+```js
+var chromeVersion = e2c.electronToChromium('1.4.11');
+// chromeVersion is "53.0.2785.143"
+```
+
+If a query does not match a Chromium version, it will return `undefined`.
+
+```js
+var chromeVersion = e2c.electronToChromium('9000');
+// chromeVersion is undefined
+```
+
+#### `chromiumToElectron(query)`
+Arguments:
+* Query: string or number, required. A major or full Chromium version.
+
+Returns a string with the corresponding Electron version for a given Chromium query.
+
+If you provide it with a major Chromium version, it will return a major Electron version:
+
+```js
+var electronVersion = e2c.chromiumToElectron('54');
+// electronVersion is "1.4"
+```
+
+If you provide it with a full Chrome version, it will return an array of full Electron versions.
+
+```js
+var electronVersions = e2c.chromiumToElectron('56.0.2924.87');
+// electronVersions is ["1.6.3", "1.6.2", "1.6.1", "1.6.0"]
+```
+
+If a query does not match an Electron version, it will return `undefined`.
+
+```js
+var electronVersion = e2c.chromiumToElectron('10');
+// electronVersion is undefined
+```
+
+#### `electronToBrowserList(query)` **DEPRECATED**
+Arguments:
+* Query: string or number, required. A major Electron version.
+
+_**Deprecated**: Browserlist already includes electron-to-chromium._
+
+A function that returns a [Browserslist](https://github.com/ai/browserslist) query that matches the given major Electron version. Returns a string.
+
+If you provide it with a major Electron version, it will return a Browserlist query string that matches the Chromium capabilities:
+
+```js
+var query = e2c.electronToBrowserList('1.4');
+// query is "Chrome >= 53"
+```
+
+If a query does not match a Chromium version, it will return `undefined`.
+
+```js
+var query = e2c.electronToBrowserList('9000');
+// query is undefined
+```
+
+### Importing just versions, fullVersions, chromiumVersions and fullChromiumVersions
+All lists can be imported on their own, if file size is a concern.
+
+#### `versions`
+
+```js
+var versions = require('electron-to-chromium/versions');
+```
+
+#### `fullVersions`
+
+```js
+var fullVersions = require('electron-to-chromium/full-versions');
+```
+
+#### `chromiumVersions`
+
+```js
+var chromiumVersions = require('electron-to-chromium/chromium-versions');
+```
+
+#### `fullChromiumVersions`
+
+```js
+var fullChromiumVersions = require('electron-to-chromium/full-chromium-versions');
+```
+
+## Updating
+This package will be updated with each new Electron release.
+
+To update the list, run `npm run build.js`. Requires internet access as it downloads from the canonical list of Electron versions.
+
+To verify correct behaviour, run `npm test`.
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FKilian%2Felectron-to-chromium.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FKilian%2Felectron-to-chromium?ref=badge_large)

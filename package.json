@@ -1,26 +1,43 @@
 {
-  "name": "darb-driver-frontend",
-  "private": true,
-  "version": "0.1.0",
-  "type": "module",
+  "name": "electron-to-chromium",
+  "version": "1.5.478",
+  "description": "Provides a list of electron-to-chromium version mappings",
+  "main": "index.js",
+  "files": [
+    "versions.js",
+    "full-versions.js",
+    "chromium-versions.js",
+    "full-chromium-versions.js",
+    "versions.json",
+    "full-versions.json",
+    "chromium-versions.json",
+    "full-chromium-versions.json",
+    "LICENSE"
+  ],
   "scripts": {
-    "dev": "vite --host 127.0.0.1",
-    "build": "vite build",
-    "preview": "vite preview --host 127.0.0.1",
-    "test": "node --test tests/domain.test.js",
-    "test:e2e": "playwright test"
+    "build": "node build.mjs",
+    "update": "node automated-update.js",
+    "test": "nyc ava --verbose",
+    "report": "nyc report --reporter=text-lcov > coverage.lcov"
   },
-  "dependencies": {
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "react-router-dom": "^7.18.5"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kilian/electron-to-chromium.git"
   },
+  "keywords": [
+    "electron",
+    "chrome",
+    "chromium",
+    "browserslist",
+    "browserlist"
+  ],
+  "author": "Kilian Valkhof",
+  "license": "ISC",
   "devDependencies": {
-    "@playwright/test": "^1.56.1",
-    "@vitejs/plugin-react": "^5.1.1",
-    "autoprefixer": "^10.4.22",
-    "postcss": "^8.5.6",
-    "tailwindcss": "3.4.19",
-    "vite": "^7.2.2"
+    "ava": "^7.0.0",
+    "compare-versions": "^6.1.1",
+    "node-fetch": "^3.3.2",
+    "nyc": "^18.0.0",
+    "shelljs": "^0.10.0"
   }
 }
